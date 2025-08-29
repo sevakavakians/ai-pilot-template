@@ -36,7 +36,7 @@ ai-pilot-template/
 │       ├── agent-prompt.md
 │       ├── maintenance-log.md
 │       └── pending-updates.md
-└── Planning-Maintainer         # Agent configuration
+└── Planning-Maintainer.md      # Agent configuration
 ```
 
 ## 🔑 Key Features
@@ -103,7 +103,24 @@ Fill in placeholders in these files:
 - `planning-docs/ARCHITECTURE.md` - System design, components
 - `CLAUDE.md` - Development commands (build, test, lint)
 
-### Step 3: Start Development
+### Step 3: Create the Planning-Maintainer Agent
+To enable automated documentation updates, create a custom Claude Code agent:
+
+1. **Open Claude Code settings** to create a new agent
+2. **Name the agent**: `planning-maintainer`
+3. **Copy the agent configuration** from `Planning-Maintainer.md` 
+4. **Use this exact description** for the agent:
+   ```
+   Use this agent when you need to automatically maintain and update project planning 
+   documentation in response to development events. This includes task completions, 
+   new task creation, status changes, blocker events, architectural decisions, 
+   new specifications, context switches, or milestone completions. The agent works 
+   silently to keep documentation current and only surfaces critical issues that 
+   need human attention.
+   ```
+5. **Save the agent** - it will now automatically trigger on relevant events
+
+### Step 4: Start Development
 When using Claude Code:
 1. Claude will automatically read the planning system on session start
 2. As you work, the planning-maintainer agent updates documentation
@@ -123,8 +140,16 @@ When using Claude Code:
 
 ## 🤖 Planning-Maintainer Agent
 
-The automated agent responds to development events and maintains documentation without interrupting your flow. It only surfaces critical issues that need human attention:
+The automated agent responds to development events and maintains documentation without interrupting your flow. The full agent prompt and configuration can be found in `Planning-Maintainer.md`.
 
+### Agent Creation Instructions
+To set up the planning-maintainer agent in Claude Code:
+1. Create a new agent named `planning-maintainer`
+2. Use the description provided in Step 3 above
+3. Copy the full prompt from `Planning-Maintainer.md` lines 10-199
+
+### What the Agent Handles
+The agent only surfaces critical issues that need human attention:
 - **Consistently wrong estimates** (>50% variance)
 - **Recurring blockers** (same issue 3+ times)
 - **Scope creep** affecting timeline
