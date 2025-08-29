@@ -18,7 +18,9 @@ This template creates a standardized, event-driven documentation system that mai
 ```
 ai-pilot-template/
 ├── CLAUDE.md                    # Claude Code integration protocol
-├── Planning-Maintainer.md       # Agent configuration
+├── agents/                      # Claude Code agent configurations
+│   ├── planning-maintainer.md  # Automated documentation agent
+│   └── test-executor-analyzer.md # Comprehensive testing agent
 ├── planning-docs/               # Planning & project management
 │   ├── README.md               # Context loading guide (start here)
 │   ├── SESSION_STATE.md        # Current work status
@@ -179,22 +181,58 @@ Fill in placeholders in these files:
 - `CLAUDE.md` - Development commands (build, test, lint)
 - `docs/` folder templates - Fill in project-specific documentation as needed
 
-### Step 3: Create the Planning-Maintainer Agent
-To enable automated documentation updates, create a custom Claude Code agent:
+### Step 3: Install Claude Code Agents
+Copy the agent configuration files to your Claude Code agents directory:
 
-1. **Open Claude Code settings** to create a new agent
-2. **Name the agent**: `planning-maintainer`
-3. **Copy the agent configuration** from `Planning-Maintainer.md` 
-4. **Use this exact description** for the agent:
-   ```
-   Use this agent when you need to automatically maintain and update project planning 
-   documentation in response to development events. This includes task completions, 
-   new task creation, status changes, blocker events, architectural decisions, 
-   new specifications, context switches, milestone completions, or knowledge refinement 
-   (when assumptions are replaced with verified facts). The agent works silently to 
-   keep documentation current and only surfaces critical issues that need human attention.
-   ```
-5. **Save the agent** - it will now automatically trigger on relevant events
+```bash
+# Create the agents directory if it doesn't exist
+mkdir -p ~/.claude/agents
+
+# Copy the agent configurations
+cp agents/*.md ~/.claude/agents/
+```
+
+This template includes two powerful agents:
+
+#### planning-maintainer
+**Purpose**: Automatically maintains and updates project planning documentation in response to development events.
+
+**Triggers on**:
+- Task completions (features, bugs, refactors)
+- New task creation or priority changes
+- Blocker identification or resolution
+- Architectural decisions
+- New specifications or scope changes
+- Context switches between features
+- Milestone completions
+- Knowledge refinement (replacing assumptions with facts)
+
+**What it does**:
+- Updates SESSION_STATE.md with current progress
+- Archives completed work with timestamps
+- Manages backlogs and task priorities
+- Documents architectural decisions
+- Tracks patterns and productivity insights
+- Preserves context between sessions
+
+#### test-executor-analyzer
+**Purpose**: Comprehensive testing and analysis after significant code changes.
+
+**Use after**:
+- Completing new features
+- Finishing bug fixes
+- Major refactoring work
+- Architectural changes
+- Any significant code modifications
+
+**What it does**:
+- Executes all available test suites (unit, integration, e2e)
+- Performs static code analysis (linters, type checkers)
+- Analyzes container logs when applicable
+- Creates detailed TEST-RESULTS.md documentation
+- Identifies and documents test failures with root cause analysis
+- Provides actionable recommendations for fixes
+- Self-corrects testing infrastructure issues
 
 ### Step 4: Start Development
 When using Claude Code:
@@ -214,23 +252,25 @@ When using Claude Code:
 | **ARCHITECTURE.md** | Technical design, patterns | On structural changes |
 | **DECISIONS.md** | Architectural choices with rationale | On each decision (append-only) |
 
-## 🤖 Planning-Maintainer Agent
+## 🤖 Claude Code Agents
 
-The automated agent responds to development events and maintains documentation without interrupting your flow. The full agent prompt and configuration can be found in `Planning-Maintainer.md`.
+This template includes two specialized agents that work together to maintain project continuity and ensure code quality. Agent configurations are stored in the `agents/` directory.
 
-### Agent Creation Instructions
-To set up the planning-maintainer agent in Claude Code:
-1. Create a new agent named `planning-maintainer`
-2. Use the description provided in Step 3 above
-3. Copy the full prompt from `Planning-Maintainer.md` lines 10-199
-
-### What the Agent Handles
-The agent only surfaces critical issues that need human attention:
+### Planning-Maintainer Agent
+Handles all documentation updates automatically, only surfacing critical issues:
 - **Consistently wrong estimates** (>50% variance)
 - **Recurring blockers** (same issue 3+ times)
 - **Scope creep** affecting timeline
 - **Technical debt crisis** (>30% productivity impact)
 - **Architecture conflicts** with established patterns
+
+### Test-Executor-Analyzer Agent
+Ensures comprehensive testing after code changes:
+- Runs all test suites in proper order
+- Performs static and dynamic analysis
+- Documents results with actionable insights
+- Self-corrects testing infrastructure issues
+- Provides debugging guidance for failures
 
 ## 🎯 Success Metrics
 
