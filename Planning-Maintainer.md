@@ -25,12 +25,13 @@ Maintain perfect project continuity by automatically updating planning documenta
 6. **New Specifications** - User provides new requirements or changes project scope
 7. **Context Switches** - Focus changes from one major area/feature to another
 8. **Milestone Completion** - Significant project phases or goals achieved
+9. **Knowledge Refinement** - Assumptions replaced with verified facts (e.g., actual file paths, correct commands, true API behavior, confirmed system architecture)
 
 ### Secondary Triggers (Background Updates)
-9. **Dependency Changes** - External libraries, APIs, or services added/modified
-10. **Integration Points** - New connections between system components
-11. **Performance Benchmarks** - Speed/efficiency measurements or optimizations
-12. **Technical Debt Identification** - Code quality issues that need future attention
+10. **Dependency Changes** - External libraries, APIs, or services added/modified
+11. **Integration Points** - New connections between system components
+12. **Performance Benchmarks** - Speed/efficiency measurements or optimizations
+13. **Technical Debt Identification** - Code quality issues that need future attention
 
 ## Response Actions by Trigger Type
 
@@ -144,6 +145,38 @@ Maintain perfect project continuity by automatically updating planning documenta
    - Flag any dependencies the new focus area needs
 ```
 
+### On Knowledge Refinement:
+```
+1. Update primary documentation:
+   - Replace assumption with verified fact in relevant docs (ARCHITECTURE.md, PROJECT_OVERVIEW.md, etc.)
+   - Mark as "Verified: [date]" with source of truth
+   - Update confidence level from "Assumed" to "Confirmed"
+
+2. Propagation check:
+   - Scan all planning docs for related assumptions using same terminology
+   - Update or flag instances needing verification
+   - Ensure consistency across SESSION_STATE.md, backlogs, and technical docs
+   - Check completed work archives for outdated information
+
+3. Knowledge base update:
+   - Add to "Verified Facts" section in ARCHITECTURE.md if technical
+   - Update command reference in PROJECT_OVERVIEW.md if operational
+   - Document discovery method in patterns.md for future reference
+   - Create or update relevant decision log if assumption affected past choices
+
+4. Impact assessment:
+   - Review active and pending tasks based on incorrect assumptions
+   - Update time estimates if actual complexity differs from assumed
+   - Flag any completed work that might need revision
+   - Adjust dependencies if actual system behavior differs
+
+5. Pattern logging:
+   - Record "Assumption → Reality" mapping in patterns.md
+   - Note discovery trigger (what revealed the truth)
+   - Update confidence levels in DECISIONS.md if affected
+   - Track frequency of assumption corrections for process improvement
+```
+
 ## Silent Operations (Never Interrupt)
 - Document updates and synchronization
 - Task archival and folder organization
@@ -216,6 +249,7 @@ You are essential to maintaining development velocity and project continuity. Wo
 4. **Decision Logging**: Capture architectural choices made during development
 5. **Context Switch Detection**: Monitor focus area changes
 6. **File Change Monitoring**: Track which files are being actively modified
+7. **Knowledge Refinement Detection**: Capture when assumptions are corrected with verified facts
 
 ### Trigger Implementation:
 ```javascript
@@ -225,6 +259,7 @@ on_new_specs(specification_text) → activate_planning_maintainer()
 on_blocker_identified(blocker_details) → activate_planning_maintainer()
 on_architectural_decision(decision_context) → activate_planning_maintainer()
 on_context_switch(old_focus, new_focus) → activate_planning_maintainer()
+on_knowledge_refined(assumption, verified_fact, context) → activate_planning_maintainer()
 ```
 
 ## Deployment Checklist

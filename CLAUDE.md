@@ -1,13 +1,25 @@
-# CLAUDE.md - Claude Code Integration Protocol
-
 ## Automated Planning System Protocol
 
-### Every Session Start
-- READ `planning-docs/README.md` to understand the current system state
-- The README will guide you to the most relevant documents for immediate context
-- Only read additional documents when specifically needed for the current work
+### Every Session Start:
+1. READ `planning-docs/README.md` to understand the current system state
+2. The README will guide you to the most relevant documents for immediate context
+3. Only read additional documents when specifically needed for the current work
 
-### Context Loading Strategy
+### Trigger Planning-Maintainer When:
+Use the Task tool with subagent_type="planning-maintainer" when these events occur:
+- **Task Completion** → Agent will update SESSION_STATE, archive work, refresh backlogs
+- **New Tasks Created** → Agent will add to backlogs with time estimates
+- **Priority Changes** → Agent will reorder backlogs and update dependencies
+- **Blocker Encountered** → Agent will log blocker, suggest alternative tasks
+- **Blocker Resolved** → Agent will update estimates, clear blocker status
+- **Architectural Decision** → Agent will update DECISIONS.md and ARCHITECTURE.md
+- **New Specifications** → Agent will parse into tasks, update scope
+- **Context Switch** → Agent will create session log, update current state
+- **Milestone Reached** → Agent will archive phase, update project overview
+- **Knowledge Refinement** → Agent will replace assumptions with verified facts across all docs
+
+### Context Loading Strategy (Read-Only):
+
 Start with minimal context and expand as needed:
 1. **Always read first**: `planning-docs/README.md` → `SESSION_STATE.md` → `DAILY_BACKLOG.md` → Latest session log
 2. **Load on demand**: Other documents only when relevant to current task
@@ -28,6 +40,7 @@ Trigger the planning-maintainer agent automatically when:
 - 🏗️ Making architectural decisions
 - 📦 Adding or updating dependencies
 - 🔧 Making significant refactors
+- 🔍 Discovering verified facts that replace assumptions
 
 #### Context Events
 - 📝 Receiving new specifications or requests
@@ -35,7 +48,7 @@ Trigger the planning-maintainer agent automatically when:
 - 🏆 Reaching project milestones
 - 📊 Completing significant features
 
-### Planning-Maintainer Integration
+### Planning-Maintainer Integration 
 
 When triggering the planning-maintainer:
 ```
@@ -44,7 +57,7 @@ Action: Update [specific documents]
 Context: [What changed and why]
 ```
 
-The agent will handle:
+The agent will handle:  
 - Updating SESSION_STATE.md with current progress
 - Moving completed items to archived folders
 - Updating backlogs with new priorities
@@ -72,67 +85,37 @@ The agent will handle:
 
 ### Document Update Responsibilities
 
-#### Your Manual Updates
+**Claude Code's Responsibility**: 
+- READ planning documentation for context
+- TRIGGER planning-maintainer agent for all documentation updates
+- EXECUTE development tasks
+
+**Planning-Maintainer's Responsibility**:
+- ALL updates to planning-docs files
+- Archive completed work
+- Update progress percentages
+- Documentation archival and organization
+- Pattern tracking and velocity calculations
+- Calculate and refine time estimate
 - Mark task status changes (pending → in_progress → completed)
+- Organize session logs
+- Sync documentation
 - Add new tasks to backlogs
 - Document architectural decisions
 - Update blockers when found/resolved
 
-#### Automated by planning-maintainer
-- Archive completed work
-- Update progress percentages
-- Calculate time estimates
-- Organize session logs
-- Sync documentation
+**Important**: Claude Code should NEVER directly edit files in planning-docs/. All documentation updates must go through the planning-maintainer agent.
 
-### Quick Reference
-
-| Task | Document | Action |
-|------|----------|--------|
-| Current work status | SESSION_STATE.md | Read first, update frequently |
-| Today's tasks | DAILY_BACKLOG.md | Check priorities, mark completions |
-| Architectural choice | DECISIONS.md | Log with timestamp and rationale |
-| Technical structure | ARCHITECTURE.md | Update when adding components |
-| Weekly planning | SPRINT_BACKLOG.md | Review weekly, update as needed |
-| Project scope | PROJECT_OVERVIEW.md | Reference for context |
-
-### Performance Optimization
-
-To maintain high productivity:
-- **Minimal context loading**: Only read what's needed for current task
-- **Immediate updates**: Mark completions as they happen
-- **Trust automation**: Let planning-maintainer handle routine updates
-- **Batch similar work**: Group related tasks to maintain focus
-
-### Error Handling
-
-If planning-maintainer fails:
-1. Check `planning-maintainer/maintenance-log.md` for errors
-2. Manually update critical documents
-3. Flag issue in `planning-maintainer/pending-updates.md`
-
----
-
-## Project-Specific Configuration
-
-### Development Commands
-```bash
-# Add your project-specific commands here
-# npm run dev
-# npm test
-# npm run build
+### How to Trigger the Planning-Maintainer:
 ```
+Example: After completing a task
+assistant: "I've finished implementing the OAuth2 authentication feature. Let me trigger the planning-maintainer to update our documentation."
+<uses Task tool with subagent_type="planning-maintainer">
 
-### Code Style Guidelines
-- Follow existing patterns in the codebase
-- Check neighboring files for conventions
-- Use existing libraries before adding new ones
+The planning-maintainer will automatically:
+- Update SESSION_STATE.md progress
+- Archive the completed task
+- Refresh the backlogs
+- Calculate actual vs estimated time
+- Log any patterns observed
 
-### Testing Requirements
-- Run tests before marking features complete
-- Check for linting errors
-- Verify builds succeed
-
----
-
-*This file integrates Claude Code with the automated planning system for maximum development efficiency.*

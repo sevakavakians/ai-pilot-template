@@ -190,9 +190,9 @@ To enable automated documentation updates, create a custom Claude Code agent:
    Use this agent when you need to automatically maintain and update project planning 
    documentation in response to development events. This includes task completions, 
    new task creation, status changes, blocker events, architectural decisions, 
-   new specifications, context switches, or milestone completions. The agent works 
-   silently to keep documentation current and only surfaces critical issues that 
-   need human attention.
+   new specifications, context switches, milestone completions, or knowledge refinement 
+   (when assumptions are replaced with verified facts). The agent works silently to 
+   keep documentation current and only surfaces critical issues that need human attention.
    ```
 5. **Save the agent** - it will now automatically trigger on relevant events
 
