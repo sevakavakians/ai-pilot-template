@@ -18,7 +18,8 @@ This template creates a standardized, event-driven documentation system that mai
 ```
 ai-pilot-template/
 ├── CLAUDE.md                    # Claude Code integration protocol
-├── planning-docs/
+├── Planning-Maintainer.md       # Agent configuration
+├── planning-docs/               # Planning & project management
 │   ├── README.md               # Context loading guide (start here)
 │   ├── SESSION_STATE.md        # Current work status
 │   ├── DAILY_BACKLOG.md        # Today's prioritized tasks
@@ -36,8 +37,82 @@ ai-pilot-template/
 │       ├── agent-prompt.md
 │       ├── maintenance-log.md
 │       └── pending-updates.md
-└── Planning-Maintainer.md      # Agent configuration
+└── docs/                        # Comprehensive documentation
+    ├── product/                 # Product & business docs
+    │   ├── SPECIFICATIONS.md   # Requirements & user stories
+    │   ├── ROADMAP.md          # Product timeline
+    │   ├── USER_PERSONAS.md    # Target users
+    │   └── METRICS.md          # KPIs & analytics
+    ├── technical/              # Technical documentation
+    │   ├── SYSTEM_DESIGN.md    # Architecture overview
+    │   ├── API_REFERENCE.md    # API documentation
+    │   ├── DATA_MODEL.md       # Database schemas
+    │   ├── INTEGRATIONS.md     # Third-party services
+    │   └── INFRASTRUCTURE.md   # Cloud & DevOps
+    ├── development/            # Development guides
+    │   ├── SETUP.md           # Environment setup
+    │   ├── CONVENTIONS.md      # Code standards
+    │   ├── TESTING.md         # Testing strategy
+    │   ├── SECURITY.md        # Security practices
+    │   └── PERFORMANCE.md     # Optimization guides
+    ├── operations/             # Operational procedures
+    │   ├── DEPLOYMENT.md      # Deploy procedures
+    │   ├── MONITORING.md      # Observability
+    │   ├── RUNBOOK.md         # Incident response
+    │   ├── DISASTER_RECOVERY.md # DR plan
+    │   └── SCALING.md         # Scaling strategies
+    └── design/                 # Design documentation
+        ├── DESIGN_SYSTEM.md    # UI components
+        ├── BRAND_GUIDELINES.md # Brand standards
+        ├── ACCESSIBILITY.md    # A11y guidelines
+        └── USER_FLOWS.md      # UX journeys
 ```
+
+## 📚 Comprehensive Documentation System
+
+The template now includes a complete documentation framework using the MECE (Mutually Exclusive, Collectively Exhaustive) principle:
+
+### Documentation Categories
+
+1. **Product Documentation** (`docs/product/`)
+   - Requirements and specifications
+   - Product roadmap and timeline
+   - User personas and research
+   - Metrics and KPIs
+
+2. **Technical Documentation** (`docs/technical/`)
+   - System design and architecture
+   - API reference and contracts
+   - Data models and schemas
+   - Third-party integrations
+   - Infrastructure and cloud resources
+
+3. **Development Documentation** (`docs/development/`)
+   - Environment setup guides
+   - Code conventions and standards
+   - Testing strategies
+   - Security best practices
+   - Performance optimization
+
+4. **Operations Documentation** (`docs/operations/`)
+   - Deployment procedures
+   - Monitoring and observability
+   - Incident response runbooks
+   - Disaster recovery plans
+   - Scaling strategies
+
+5. **Design Documentation** (`docs/design/`)
+   - Design system and components
+   - Brand guidelines
+   - Accessibility standards
+   - User flows and journey maps
+
+Each template includes:
+- Clear purpose and audience
+- Comprehensive sections with examples
+- Industry best practices
+- Placeholder content for customization
+- Update frequency guidelines
 
 ## 🔑 Key Features
 
@@ -102,6 +177,7 @@ Fill in placeholders in these files:
 - `planning-docs/PROJECT_OVERVIEW.md` - Project name, tech stack, goals
 - `planning-docs/ARCHITECTURE.md` - System design, components
 - `CLAUDE.md` - Development commands (build, test, lint)
+- `docs/` folder templates - Fill in project-specific documentation as needed
 
 ### Step 3: Create the Planning-Maintainer Agent
 To enable automated documentation updates, create a custom Claude Code agent:
