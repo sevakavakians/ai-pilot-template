@@ -242,7 +242,7 @@ This interactive script will:
 
 ### Agents Included
 
-#### project-manager (formerly planning-maintainer)
+#### project-manager
 **Purpose**: Automatically maintains and updates project planning documentation in response to development events.
 
 **Triggers on**:
@@ -263,7 +263,7 @@ This interactive script will:
 - Tracks patterns and productivity insights
 - Preserves context between sessions
 
-#### test-analyst (formerly test-executor-analyzer)
+#### test-analyst
 **Purpose**: Comprehensive testing and analysis after significant code changes.
 
 **Use after**:
