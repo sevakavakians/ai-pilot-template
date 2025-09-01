@@ -184,13 +184,81 @@ git init
 git add .
 git commit -m "Initial commit from AI Pilot Template"
 
-# Clean up template files if desired
+# Rename planning-maintainer folder to project-manager
+if [ -d "planning-docs/planning-maintainer" ]; then
+    print_color "$GREEN" "Updating folder structure..."
+    mv planning-docs/planning-maintainer planning-docs/project-manager
+    print_color "$GREEN" "✓ Renamed planning-maintainer to project-manager"
+fi
+
+# Comprehensive cleanup of template files
 print_color "$YELLOW" "\nCleanup options:"
-REMOVE_TEMPLATES=$(prompt_with_default "Remove template variations? (y/n)" "y")
+REMOVE_TEMPLATES=$(prompt_with_default "Remove ALL template-specific files? (recommended)" "y")
 if [ "$REMOVE_TEMPLATES" = "y" ]; then
-    rm -rf templates/
-    rm -f CLAUDE-TEMPLATE.md
-    print_color "$GREEN" "✓ Template files removed"
+    print_color "$GREEN" "Removing template files..."
+    
+    # Remove template variations
+    [ -d "templates" ] && rm -rf templates/ && print_color "$GREEN" "  ✓ Removed templates/"
+    
+    # Remove template documentation
+    [ -f "CLAUDE-TEMPLATE.md" ] && rm -f CLAUDE-TEMPLATE.md && print_color "$GREEN" "  ✓ Removed CLAUDE-TEMPLATE.md"
+    [ -f "QUICK_START.md" ] && rm -f QUICK_START.md && print_color "$GREEN" "  ✓ Removed QUICK_START.md"
+    [ -f "SHARING.md" ] && rm -f SHARING.md && print_color "$GREEN" "  ✓ Removed SHARING.md"
+    
+    # Remove setup scripts
+    [ -f "cleanup.sh" ] && rm -f cleanup.sh && print_color "$GREEN" "  ✓ Removed cleanup.sh"
+    [ -f ".templateignore" ] && rm -f .templateignore && print_color "$GREEN" "  ✓ Removed .templateignore"
+    
+    # Remove agent source files (already copied to ~/.claude/agents)
+    [ -d "agents" ] && rm -rf agents/ && print_color "$GREEN" "  ✓ Removed agents/ (already installed)"
+    
+    # Create project-specific README if template README exists
+    if grep -q "AI Pilot Template" README.md 2>/dev/null; then
+        print_color "$YELLOW" "Creating project-specific README..."
+        cat > README.md << EOF
+# $PROJECT_NAME
+
+$PROJECT_DESCRIPTION
+
+## Getting Started
+
+\`\`\`bash
+# Build the project
+$BUILD_COMMAND
+
+# Run the project
+$RUN_COMMAND
+
+# Run tests
+$TEST_COMMAND
+\`\`\`
+
+## Development with Claude Code
+
+This project uses automated agents:
+- **project-manager**: Handles documentation updates
+- **test-analyst**: Manages testing
+
+## Project Structure
+
+- \`planning-docs/\` - Project planning and tracking
+- \`docs/\` - Comprehensive documentation  
+- \`tests/\` - Test suites
+- \`CLAUDE.md\` - Claude Code configuration
+
+## License
+
+[Your license here]
+EOF
+        print_color "$GREEN" "  ✓ Created project-specific README.md"
+    fi
+    
+    # Remove setup.sh itself (must be last)
+    print_color "$YELLOW" "  Note: Run 'rm setup.sh' to remove the setup script"
+    
+    print_color "$GREEN" "\n✓ Template cleanup complete!"
+else
+    print_color "$YELLOW" "Template files retained. Run './cleanup.sh' later to remove them."
 fi
 
 # Summary

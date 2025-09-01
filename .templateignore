@@ -1,0 +1,21 @@
+# Template files to remove after setup
+# These files are only needed for initial setup and can be safely removed
+
+# Setup and cleanup scripts
+setup.sh
+cleanup.sh
+.templateignore
+
+# Template documentation
+QUICK_START.md
+SHARING.md
+CLAUDE-TEMPLATE.md
+
+# Template variations (already applied during setup)
+templates/
+
+# Agent source files (already copied to ~/.claude/agents)
+agents/
+
+# Original template README (will be replaced with project-specific version)
+# Note: setup.sh should create a new project-specific README.md

@@ -21,12 +21,14 @@ cd my-project
 ./setup.sh
 ```
 
-The setup wizard will ask you for:
-- Project name
-- Project description  
-- Project type (web-app, api-service, cli-tool, library, or generic)
-- Primary language
-- Build/test commands (with sensible defaults)
+The setup wizard will:
+- Ask for your project details
+- Apply the appropriate template
+- Replace all placeholders
+- Install Claude Code agents
+- **Clean up template files** (removes setup scripts, templates, etc.)
+- Create a project-specific README
+- Initialize git repository
 
 ### 2. Quick Customization (2 minutes)
 
@@ -145,7 +147,39 @@ claude code . --resume
 # Claude triggers test-analyst automatically
 ```
 
+## Cleanup After Setup
+
+The setup script automatically removes template-specific files, keeping only what's needed for your project.
+
+### What Gets Removed
+- ✅ Template files (QUICK_START.md, SHARING.md, etc.)
+- ✅ Setup scripts (setup.sh, cleanup.sh)
+- ✅ Template variations (templates/ folder)
+- ✅ Agent source files (after copying to ~/.claude/agents)
+- ✅ Original template README (replaced with project version)
+
+### What You Keep
+- ✓ CLAUDE.md (customized for your project)
+- ✓ planning-docs/ (project planning)
+- ✓ docs/ (documentation templates)
+- ✓ tests/ (test structure)
+- ✓ .git/ (your project's git repo)
+
+### Manual Cleanup
+If you skipped cleanup during setup, run:
+```bash
+./cleanup.sh
+```
+
 ## Troubleshooting
+
+### Issue: Template files still present
+```bash
+# Run the cleanup script
+./cleanup.sh
+# Or manually remove using .templateignore as reference
+cat .templateignore
+```
 
 ### Issue: Agents not working
 ```bash
