@@ -8,19 +8,57 @@ This template creates a standardized, event-driven documentation system that mai
 
 ## 🚀 Quick Start
 
+### Automatic Setup (Recommended) - 5 Minutes!
+
+```bash
+# Clone and run the interactive setup
+git clone https://github.com/your-username/ai-pilot-template.git my-project
+cd my-project
+./setup.sh
+```
+
+The setup wizard will:
+- Ask for your project details
+- Apply the right template (web-app, api-service, cli-tool, library)
+- Configure your development commands
+- Install Claude Code agents
+- Initialize git repository
+
+### Manual Setup
+
 1. **Clone this template** for your new project
-2. **Fill in project-specific details** in the planning documents (marked with placeholders like `[Project Name]`)
-3. **Configure development commands** in `CLAUDE.md` (build, test, lint commands)
-4. **Start coding** - Claude Code will automatically maintain your documentation
+2. **Choose a template** from `templates/` if needed
+3. **Fill in placeholders** marked with `[BRACKETS]` in CLAUDE.md
+4. **Install agents** by copying `agents/*.md` to `~/.claude/agents/`
+5. **Start coding** - Claude Code will automatically maintain your documentation
+
+**Need help?** Check out [QUICK_START.md](QUICK_START.md) for a detailed 5-minute guide!
 
 ## 📁 Project Structure
 
 ```
 ai-pilot-template/
-├── CLAUDE.md                    # Claude Code integration protocol
-├── agents/                      # Claude Code agent configurations
-│   ├── planning-maintainer.md  # Automated documentation agent
-│   └── test-executor-analyzer.md # Comprehensive testing agent
+├── CLAUDE.md                    # Universal template with placeholders
+├── QUICK_START.md              # 5-minute setup guide
+├── SHARING.md                  # Team collaboration guide
+├── setup.sh                    # Interactive setup script
+├── templates/                  # Project-type specific templates
+│   ├── web-app.md             # Web application template
+│   ├── api-service.md         # API/microservice template
+│   ├── cli-tool.md            # CLI tool template
+│   └── library.md             # Library/package template
+├── agents/                     # Claude Code agent configurations
+│   ├── project-manager.md     # Automated documentation agent
+│   └── test-analyst.md        # Comprehensive testing agent
+├── tests/                      # Test suite structure
+│   ├── unit/                  # Unit test templates
+│   ├── integration/           # Integration test templates
+│   ├── e2e/                   # End-to-end test templates
+│   ├── performance/           # Performance test templates
+│   ├── security/              # Security test templates
+│   ├── fixtures/              # Test data and mocks
+│   ├── README.md              # Testing documentation
+│   └── TEST-RESULTS.md        # Test execution results
 ├── planning-docs/               # Planning & project management
 │   ├── README.md               # Context loading guide (start here)
 │   ├── SESSION_STATE.md        # Current work status
@@ -181,20 +219,30 @@ Fill in placeholders in these files:
 - `CLAUDE.md` - Development commands (build, test, lint)
 - `docs/` folder templates - Fill in project-specific documentation as needed
 
-### Step 3: Install Claude Code Agents
-Copy the agent configuration files to your Claude Code agents directory:
+### Step 3: Choose Your Project Type
+The template includes specialized configurations for different project types:
 
+- **web-app**: React/Vue/Angular applications
+- **api-service**: REST/GraphQL APIs
+- **cli-tool**: Command-line tools
+- **library**: NPM/PyPI packages
+- **generic**: General purpose (default)
+
+### Step 4: Run the Setup Script
 ```bash
-# Create the agents directory if it doesn't exist
-mkdir -p ~/.claude/agents
-
-# Copy the agent configurations
-cp agents/*.md ~/.claude/agents/
+./setup.sh
 ```
 
-This template includes two powerful agents:
+This interactive script will:
+- Prompt for project details
+- Apply the appropriate template
+- Replace all placeholders
+- Install agents automatically
+- Initialize git repository
 
-#### planning-maintainer
+### Agents Included
+
+#### project-manager (formerly planning-maintainer)
 **Purpose**: Automatically maintains and updates project planning documentation in response to development events.
 
 **Triggers on**:
@@ -215,7 +263,7 @@ This template includes two powerful agents:
 - Tracks patterns and productivity insights
 - Preserves context between sessions
 
-#### test-executor-analyzer
+#### test-analyst (formerly test-executor-analyzer)
 **Purpose**: Comprehensive testing and analysis after significant code changes.
 
 **Use after**:
@@ -256,7 +304,7 @@ When using Claude Code:
 
 This template includes two specialized agents that work together to maintain project continuity and ensure code quality. Agent configurations are stored in the `agents/` directory.
 
-### Planning-Maintainer Agent
+### Project-Manager Agent (project-manager.md)
 Handles all documentation updates automatically, only surfacing critical issues:
 - **Consistently wrong estimates** (>50% variance)
 - **Recurring blockers** (same issue 3+ times)
@@ -264,7 +312,7 @@ Handles all documentation updates automatically, only surfacing critical issues:
 - **Technical debt crisis** (>30% productivity impact)
 - **Architecture conflicts** with established patterns
 
-### Test-Executor-Analyzer Agent
+### Test-Analyst Agent (test-analyst.md)
 Ensures comprehensive testing after code changes:
 - Runs all test suites in proper order
 - Performs static and dynamic analysis
@@ -293,10 +341,44 @@ When properly configured, this template provides:
 ## 🔧 Customization
 
 This template is designed to be adapted to your specific workflow:
+
+### Quick Customization
+- Run `./setup.sh` for interactive configuration
+- Choose from pre-built templates in `templates/`
+- All placeholders marked with `[BRACKETS]` for easy finding
+
+### Advanced Customization
 - Modify document templates to match your project structure
-- Adjust the planning-maintainer triggers for your development style
+- Adjust the agent triggers for your development style
 - Add project-specific sections to planning documents
-- Configure your preferred development commands in CLAUDE.md
+- Create your own project type templates
+
+### Sharing with Your Team
+See [SHARING.md](SHARING.md) for:
+- Team setup instructions
+- Configuration management
+- Collaborative workflows
+- Contributing improvements back
+
+## 🎯 What's New in This Version
+
+### Universal Template System
+- ✅ Clear `[PLACEHOLDER]` markers throughout
+- ✅ Project type templates (web, API, CLI, library)
+- ✅ Interactive setup script
+- ✅ 5-minute quick start guide
+
+### Enhanced Testing
+- ✅ Complete test folder structure
+- ✅ Test templates for all types
+- ✅ TEST-RESULTS.md automation
+- ✅ Comprehensive testing guide
+
+### Better Collaboration
+- ✅ Team sharing guide
+- ✅ Standardized agent names
+- ✅ Configuration management
+- ✅ Version control strategies
 
 ## 📄 License
 
@@ -305,6 +387,14 @@ This template is open source and available for use in any project. Feel free to 
 ## 🤝 Contributing
 
 Improvements to the template are welcome! If you develop useful additions or refinements, consider sharing them back to help other developers.
+
+### How to Contribute
+1. Fork the repository
+2. Create your feature branch
+3. Add your improvements
+4. Submit a pull request
+
+See [SHARING.md](SHARING.md) for more details on sharing improvements.
 
 ---
 
