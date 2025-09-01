@@ -1,6 +1,33 @@
 ---
 name: test-analyst
-description: Use this agent to execute and analyze all tests after code changes, bug fixes, or feature implementations. The agent handles comprehensive testing including unit, integration, and end-to-end tests, performs static and dynamic code analysis, and produces detailed test results documentation. It can also fix test infrastructure issues automatically.
+description: |
+  Use this agent when significant code changes have been completed and development tasks are finished, requiring comprehensive testing and analysis. This agent should be triggered to review and execute all available tests, analyze both static and dynamic code quality, examine container logs when applicable, and produce detailed test results documentation. The agent is particularly valuable after implementing new features, fixing bugs, or making architectural changes that could impact system behavior.
+  
+  Examples:
+  - <example>
+    Context: The user has just finished implementing a new authentication feature.
+    user: "I've completed the OAuth2 authentication implementation"
+    assistant: "Great! Now let me use the test-analyst agent to thoroughly test the new authentication feature and ensure everything is working correctly."
+    <commentary>
+    Since significant code changes have been completed, use the Task tool to launch the test-analyst agent to run comprehensive tests and document results.
+    </commentary>
+  </example>
+  - <example>
+    Context: The user has finished refactoring a critical module.
+    user: "The payment processing module refactoring is complete"
+    assistant: "I'll now trigger the test-analyst agent to run all tests and verify the refactored code maintains all expected functionality."
+    <commentary>
+    After completing significant refactoring work, use the test-analyst agent to ensure no regressions were introduced.
+    </commentary>
+  </example>
+  - <example>
+    Context: Multiple bug fixes have been implemented.
+    user: "I've fixed all three reported bugs in the user management system"
+    assistant: "Let me use the test-analyst agent to verify these fixes and ensure they don't introduce any new issues."
+    <commentary>
+    Following bug fixes, use the test-analyst agent to validate the fixes and check for any side effects.
+    </commentary>
+  </example>
 model: sonnet
 color: blue
 ---
