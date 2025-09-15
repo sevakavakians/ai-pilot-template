@@ -5,6 +5,8 @@
 
 set -e
 
+SCRIPT_DIR=$(dirname "$0")
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -34,17 +36,14 @@ print_color "$BLUE" "   AI Pilot Template Setup Wizard    "
 print_color "$BLUE" "======================================"
 echo
 
-# Check if we're in the template directory
-if [ ! -f "CLAUDE.md" ]; then
-    print_color "$RED" "Error: CLAUDE.md not found. Please run this script from the template directory."
-    exit 1
-fi
-
 # Gather project information
 print_color "$GREEN" "Let's set up your project!"
 echo
 
-PROJECT_NAME=$(prompt_with_default "Project name" "my-project")
+# set project name to the directory name
+PROJECT_NAME=$(basename $(pwd))
+
+PROJECT_NAME=$(prompt_with_default "Project name" "$PROJECT_NAME")
 PROJECT_DESCRIPTION=$(prompt_with_default "Project description" "A new software project")
 PROJECT_TYPE=$(prompt_with_default "Project type (web-app/api-service/cli-tool/library/generic)" "generic")
 PRIMARY_LANGUAGE=$(prompt_with_default "Primary language (javascript/typescript/python/go/other)" "javascript")
@@ -102,7 +101,7 @@ replace_placeholders() {
     file=$1
     if [ -f "$file" ]; then
         # Use different delimiter for sed to avoid conflicts with forward slashes in commands
-        sed -i.bak \
+        sed -i '' \
             -e "s|\[PROJECT_NAME\]|$PROJECT_NAME|g" \
             -e "s|\[PROJECT_DESCRIPTION\]|$PROJECT_DESCRIPTION|g" \
             -e "s|\[PRIMARY_LANGUAGE\]|$PRIMARY_LANGUAGE|g" \
@@ -112,24 +111,46 @@ replace_placeholders() {
             -e "s|\[LINT_COMMAND\]|$LINT_COMMAND|g" \
             -e "s|\[RUN_COMMAND\]|$RUN_COMMAND|g" \
             -e "s|\[DEV_COMMAND\]|$DEV_COMMAND|g" \
-            "$file"
-        rm "${file}.bak"
+            "$file" 
     fi
 }
 
-# Create project directory if not in template
+# We assume that the user will run this script from the new repository directory
 if [ "$(basename $(pwd))" = "ai-pilot-template" ]; then
-    print_color "$YELLOW" "\nCreating new project directory: $PROJECT_NAME"
-    cd ..
-    cp -r ai-pilot-template "$PROJECT_NAME"
-    cd "$PROJECT_NAME"
-    rm -rf .git
+print_color "$RED" "Error: Running from ai-pilot repository. Please run this script from your new project directory."
+    exit 1
+else
+    # If the directory is not the template directory, copy files over.
+    print_color "$YELLOW" "\nSetting up AI Pilot files in the current directory..."
+
+    TEMPLATE_ASSETS=("planning-docs" "docs" "tests" "README.md")
+    for asset in "${TEMPLATE_ASSETS[@]}"; do
+        if [ -e "$asset" ]; then
+            print_color "$YELLOW" "  - '$asset' already exists, skipping."
+        else
+            print_color "$GREEN" "  - Copying '$asset'..."
+            # Use rsync -a for directories and cp for files
+            if [ -d "$SCRIPT_DIR/$asset" ]; then
+                rsync -a --exclude=.git "$SCRIPT_DIR/$asset" .
+            else
+                cp "$SCRIPT_DIR/$asset" .
+            fi
+        fi
+    done
+fi
+
+if [ -f CLAUDE.md ]; then
+    print_color "$YELLOW" "CLAUDE.md already exists, backing up to CLAUDE.md.bak."
+    cp CLAUDE.md CLAUDE.md.bak
 fi
 
 # Apply the appropriate template
-if [ "$PROJECT_TYPE" != "generic" ] && [ -f "templates/${PROJECT_TYPE}.md" ]; then
+if [ "$PROJECT_TYPE" != "generic" ] && [ -f "$SCRIPT_DIR/templates/${PROJECT_TYPE}.md" ]; then
     print_color "$GREEN" "Applying $PROJECT_TYPE template..."
-    cp "templates/${PROJECT_TYPE}.md" CLAUDE.md
+    cp "$SCRIPT_DIR/templates/${PROJECT_TYPE}.md" CLAUDE.md
+else
+    print_color "$YELLOW" "Applying generic template..."
+    cp "$SCRIPT_DIR/CLAUDE.md" CLAUDE.md
 fi
 
 # Replace placeholders in key files
@@ -168,21 +189,25 @@ This directory contains all tests for the project.
 See CLAUDE.md for test commands specific to this project.
 EOF
 
-# Install Claude Code agents
-print_color "$GREEN" "\nInstalling Claude Code agents..."
-CLAUDE_AGENTS_DIR="$HOME/.claude/agents"
-mkdir -p "$CLAUDE_AGENTS_DIR"
-
-if [ -d "agents" ]; then
-    cp agents/*.md "$CLAUDE_AGENTS_DIR/" 2>/dev/null || true
+if [ -d "$SCRIPT_DIR/agents" ]; then
+    # Install Claude Code agents
+    print_color "$GREEN" "\nInstalling Claude Code agents..."
+    CLAUDE_AGENTS_DIR="$HOME/.claude/agents"
+    mkdir -p "$CLAUDE_AGENTS_DIR"
+    cp "$SCRIPT_DIR/agents"/*.md "$CLAUDE_AGENTS_DIR/" 2>/dev/null || true
     print_color "$GREEN" "✓ Agents installed to $CLAUDE_AGENTS_DIR"
 fi
 
-# Initialize git repository
-print_color "$GREEN" "\nInitializing git repository..."
-git init
-git add .
-git commit -m "Initial commit from AI Pilot Template"
+if [ ! -d ".git" ]; then
+    # Initialize git repository
+    print_color "$GREEN" "\nInitializing git repository..."
+    git init
+    git add .
+    git commit -m "Initial commit from AI Pilot Template"
+    print_color "$GREEN" "✓ Git repository initialized"
+else
+    print_color "$YELLOW" "\nNew files have been created. Please review and commit them to your repository."
+fi
 
 # Rename planning-maintainer folder to project-manager
 if [ -d "planning-docs/planning-maintainer" ]; then
@@ -191,31 +216,10 @@ if [ -d "planning-docs/planning-maintainer" ]; then
     print_color "$GREEN" "✓ Renamed planning-maintainer to project-manager"
 fi
 
-# Comprehensive cleanup of template files
-print_color "$YELLOW" "\nCleanup options:"
-REMOVE_TEMPLATES=$(prompt_with_default "Remove ALL template-specific files? (recommended)" "y")
-if [ "$REMOVE_TEMPLATES" = "y" ]; then
-    print_color "$GREEN" "Removing template files..."
-    
-    # Remove template variations
-    [ -d "templates" ] && rm -rf templates/ && print_color "$GREEN" "  ✓ Removed templates/"
-    
-    # Remove template documentation
-    [ -f "CLAUDE-TEMPLATE.md" ] && rm -f CLAUDE-TEMPLATE.md && print_color "$GREEN" "  ✓ Removed CLAUDE-TEMPLATE.md"
-    [ -f "QUICK_START.md" ] && rm -f QUICK_START.md && print_color "$GREEN" "  ✓ Removed QUICK_START.md"
-    [ -f "SHARING.md" ] && rm -f SHARING.md && print_color "$GREEN" "  ✓ Removed SHARING.md"
-    
-    # Remove setup scripts
-    [ -f "cleanup.sh" ] && rm -f cleanup.sh && print_color "$GREEN" "  ✓ Removed cleanup.sh"
-    [ -f ".templateignore" ] && rm -f .templateignore && print_color "$GREEN" "  ✓ Removed .templateignore"
-    
-    # Remove agent source files (already copied to ~/.claude/agents)
-    [ -d "agents" ] && rm -rf agents/ && print_color "$GREEN" "  ✓ Removed agents/ (already installed)"
-    
-    # Create project-specific README if template README exists
-    if grep -q "AI Pilot Template" README.md 2>/dev/null; then
-        print_color "$YELLOW" "Creating project-specific README..."
-        cat > README.md << EOF
+# Create project-specific README if template README exists
+if grep -q "AI Pilot Template" README.md 2>/dev/null; then
+    print_color "$YELLOW" "Creating project-specific README..."
+    cat > README.md << EOF
 # $PROJECT_NAME
 
 $PROJECT_DESCRIPTION
@@ -250,15 +254,7 @@ This project uses automated agents:
 
 [Your license here]
 EOF
-        print_color "$GREEN" "  ✓ Created project-specific README.md"
-    fi
-    
-    # Remove setup.sh itself (must be last)
-    print_color "$YELLOW" "  Note: Run 'rm setup.sh' to remove the setup script"
-    
-    print_color "$GREEN" "\n✓ Template cleanup complete!"
-else
-    print_color "$YELLOW" "Template files retained. Run './cleanup.sh' later to remove them."
+    print_color "$GREEN" "  ✓ Created project-specific README.md"
 fi
 
 # Summary
@@ -278,6 +274,6 @@ echo "2. Fill in the planning-docs/ with your project details"
 echo "3. Start coding with Claude Code!"
 echo
 print_color "$BLUE" "To get started with Claude Code:"
-echo "  claude code ."
+echo "  claude ."
 echo
 print_color "$GREEN" "Happy coding! 🚀"
